@@ -1,5 +1,12 @@
 # Changelog - Peralta Gardens App
 
+## [1.0.1] - 2025-07-23
+
+### 🔧 Fixed
+- Resolved Git branch configuration issues
+- Updated repository structure for better GitHub integration
+- Fixed import paths after modular restructuring
+
 ## [1.0.0] - 2025-07-23
 
 ### ✨ Added
