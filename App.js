@@ -13,6 +13,13 @@ import { ServicosDefinidosProvider } from './context/ServicosDefinidosContext';
 import { ListaComprasProvider } from './context/ListaComprasContext';
 import { ProdutosProvider } from './context/ProdutosContext';
 import { ProdutosFitofarmaceuticosProvider } from './context/ProdutosFitofarmaceuticosContext';
+import { AgendamentosProvider } from './context/AgendamentosContext';
+import { FaturasFornecedorProvider } from './context/FaturasFornecedorContext';
+import { ServicosPrestadosProvider } from './context/ServicosPrestadosContext';
+import { ServicosDefinidosProvider } from './context/ServicosDefinidosContext';
+import { ListaComprasProvider } from './context/ListaComprasContext';
+import { ProdutosProvider } from './context/ProdutosContext';
+import { ProdutosFitofarmaceuticosProvider } from './context/ProdutosFitofarmaceuticosContext';
 import NotificationService from './src/services/notifications/NotificationService';
 import { LoginClean } from './src/screens/auth';
 import { AuthenticatedTabNavigator } from './src/navigation';
@@ -52,6 +59,12 @@ import GerarDocumentoServico from './screens/GerarDocumentoServico';
 // Importar telas de lista de compras
 import ListaCompras from './screens/ListaCompras';
 import AdicionarItemCompra from './screens/AdicionarItemCompra';
+
+// Importar telas de agendamento inteligente
+import AgendamentoInteligente from './screens/AgendamentoInteligente';
+import CalendarioAgendamentos from './screens/CalendarioAgendamentos';
+import RelatoriosAgendamentos from './screens/RelatoriosAgendamentos';
+import ReagendamentoInteligente from './components/ReagendamentoInteligente';
 
 const Stack = createNativeStackNavigator();
 
@@ -147,10 +160,11 @@ function AppContent() {
           <ServicosPrestadosProvider>
             <ServicosDefinidosProvider>
               <ListaComprasProvider>
-                <ClientesProvider>
-                <TarefasProvider>
-                  <ProdutosProvider>
-                    <ProdutosFitofarmaceuticosProvider>
+                <AgendamentosProvider>
+                  <ClientesProvider>
+                    <TarefasProvider>
+                      <ProdutosProvider>
+                        <ProdutosFitofarmaceuticosProvider>
               <NavigationContainer 
                 ref={navigationRef}
                 onStateChange={(state) => {
@@ -392,6 +406,27 @@ function AppContent() {
                       component={AdicionarItemCompra}
                       options={{ headerShown: false }}
                     />
+                    {/* Telas de Agendamento Inteligente */}
+                    <Stack.Screen 
+                      name="AgendamentoInteligente" 
+                      component={AgendamentoInteligente}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="CalendarioAgendamentos" 
+                      component={CalendarioAgendamentos}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="RelatoriosAgendamentos" 
+                      component={RelatoriosAgendamentos}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="ReagendamentoInteligente" 
+                      component={ReagendamentoInteligente}
+                      options={{ headerShown: false }}
+                    />
                     {/* Screen temporário para capturar navegação para Tarefas */}
                     <Stack.Screen 
                       name="Tarefas" 
@@ -408,10 +443,11 @@ function AppContent() {
                 )}
               </Stack.Navigator>
             </NavigationContainer>
-                    </ProdutosFitofarmaceuticosProvider>
-                  </ProdutosProvider>
-                </TarefasProvider>
-              </ClientesProvider>
+                        </ProdutosFitofarmaceuticosProvider>
+                      </ProdutosProvider>
+                    </TarefasProvider>
+                  </ClientesProvider>
+                </AgendamentosProvider>
               </ListaComprasProvider>
             </ServicosDefinidosProvider>
           </ServicosPrestadosProvider>

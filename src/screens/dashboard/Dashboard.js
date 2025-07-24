@@ -372,6 +372,48 @@ export default function Dashboard({ navigation }) {
           console.error('Erro ao navegar para ListaCompras:', error);
         }
       }
+    },
+    {
+      title: 'Novo Agendamento',
+      icon: 'calendar-outline',
+      count: 'IA',
+      subtitle: 'Agendamento inteligente',
+      color: '#9c27b0',
+      onPress: () => {
+        try {
+          navigation.navigate('AgendamentoInteligente');
+        } catch (error) {
+          console.error('Erro ao navegar para AgendamentoInteligente:', error);
+        }
+      }
+    },
+    {
+      title: 'Calendário',
+      icon: 'calendar',
+      count: new Date().getDate().toString(),
+      subtitle: 'Ver agendamentos',
+      color: '#ff9800',
+      onPress: () => {
+        try {
+          navigation.navigate('CalendarioAgendamentos');
+        } catch (error) {
+          console.error('Erro ao navegar para CalendarioAgendamentos:', error);
+        }
+      }
+    },
+    {
+      title: 'Relatórios',
+      icon: 'analytics-outline',
+      count: 'BI',
+      subtitle: 'Análise de dados',
+      color: '#607d8b',
+      onPress: () => {
+        try {
+          navigation.navigate('RelatoriosAgendamentos');
+        } catch (error) {
+          console.error('Erro ao navegar para RelatoriosAgendamentos:', error);
+        }
+      }
     }
   ];
 
