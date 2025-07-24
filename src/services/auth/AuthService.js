@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import OfflineDatabase from './OfflineDatabase';
+import OfflineDatabase from '../database/OfflineDatabase';
 
 class AuthService {
   constructor() {

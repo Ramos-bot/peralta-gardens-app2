@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useProdutos } from '../../context/ProdutosContext';
+import { useProdutos } from '../../../context/ProdutosContext';
 
 const AdicionarProduto = ({ navigation }) => {
   const { addProduto, categorias } = useProdutos();

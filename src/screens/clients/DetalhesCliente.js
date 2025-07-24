@@ -9,9 +9,9 @@ import {
   Linking,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useClientes } from '../../context/ClientesContext';
-import { useTarefas } from '../../context/TarefasContext';
-import { useFaturas } from '../../context/FaturasContext';
+import { useClientes } from '../../../context/ClientesContext';
+import { useTarefas } from '../../../context/TarefasContext';
+import { useFaturas } from '../../../context/FaturasContext';
 
 export default function DetalhesCliente({ route, navigation }) {
   const { clienteId } = route.params;

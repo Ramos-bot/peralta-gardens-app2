@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useBackupService, useBackupStats } from '../hooks/useBackupService';
+import { useBackupService, useBackupStats } from '../../../hooks/useBackupService';
 
 const BackupsExportacao = ({ navigation }) => {
   const {

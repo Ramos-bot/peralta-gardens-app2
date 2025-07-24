@@ -19,7 +19,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFornecedores } from '../context/FornecedoresContext';
 import { useFaturasFornecedor } from '../context/FaturasFornecedorContext';
 import { FaturaOCRService } from '../services/FaturaOCRService';
-import DuplicateDetectionModal from '../../components/DuplicateDetectionModal';
+import DuplicateDetectionModal from '../components/DuplicateDetectionModal';
 
 export default function InserirFaturaFornecedor({ navigation }) {
   const { fornecedores, obterOuCriarFornecedor } = useFornecedores();

@@ -12,8 +12,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useTarefas } from '../../context/TarefasContext';
-import { useClientes } from '../../context/ClientesContext';
+import { useTarefas } from '../../../context/TarefasContext';
+import { useClientes } from '../../../context/ClientesContext';
 
 export default function Tarefas({ navigation }) {
   const { tarefas, toggleTarefaConcluida, deleteTarefa, loading, funcionarios } = useTarefas();

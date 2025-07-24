@@ -1,0 +1,18 @@
+modules = ["nodejs-18"]
+
+[nix]
+channel = "stable-22_11"
+
+[deployment]
+run = ["npm", "start"]
+
+[[ports]]
+localPort = 8082
+externalPort = 80
+
+[[ports]]
+localPort = 19000
+externalPort = 3000
+
+[env]
+NODE_ENV = "development"

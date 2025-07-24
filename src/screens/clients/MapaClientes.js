@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons } from '@expo/vector-icons';
-import { useClientes } from '../../context/ClientesContext';
+import { useClientes } from '../../../context/ClientesContext';
 
 export default function MapaClientes({ navigation }) {
   const { clientes, loading, getClienteById } = useClientes();

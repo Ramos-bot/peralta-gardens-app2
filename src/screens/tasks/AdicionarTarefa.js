@@ -10,7 +10,7 @@ import {
   Modal
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useTarefas } from '../../context/TarefasContext';
+import { useTarefas } from '../../../context/TarefasContext';
 
 export default function AdicionarTarefa({ navigation, route }) {
   const { addTarefa, funcionarios } = useTarefas();

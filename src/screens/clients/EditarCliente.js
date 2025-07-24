@@ -10,7 +10,7 @@ import {
   Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useClientes } from '../../context/ClientesContext';
+import { useClientes } from '../../../context/ClientesContext';
 
 export default function EditarCliente({ route, navigation }) {
   const { cliente } = route.params;

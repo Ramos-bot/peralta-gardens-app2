@@ -10,7 +10,7 @@ import {
   Modal
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useProdutosFitofarmaceuticos } from '../../context/ProdutosFitofarmaceuticosContext';
+import { useProdutosFitofarmaceuticos } from '../../../context/ProdutosFitofarmaceuticosContext';
 
 export default function RegistrarAplicacao({ navigation }) {
   const { produtos, calcularDose, registrarAplicacao } = useProdutosFitofarmaceuticos();
