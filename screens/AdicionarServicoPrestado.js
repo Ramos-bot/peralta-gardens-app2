@@ -14,9 +14,9 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useServicosPrestados } from '../../context/ServicosPrestadosContext';
-import { useClientes } from '../../context/ClientesContext';
-import { useTarefas } from '../../context/TarefasContext';
+import { useServicosPrestados } from '../context/ServicosPrestadosContext';
+import { useClientes } from '../context/ClientesContext';
+import { useTarefas } from '../context/TarefasContext';
 import { useServicosDefinidos } from '../context/ServicosDefinidosContext';
 
 export default function AdicionarServicoPrestado({ navigation, route }) {

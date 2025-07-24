@@ -11,8 +11,8 @@ import {
   TextInput
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useServicosPrestados } from '../../context/ServicosPrestadosContext';
-import { useClientes } from '../../context/ClientesContext';
+import { useServicosPrestados } from '../context/ServicosPrestadosContext';
+import { useClientes } from '../context/ClientesContext';
 
 export default function ServicosPrestados({ navigation }) {
   const { servicos, loading, getEstatisticas, removerServico, recarregar } = useServicosPrestados();

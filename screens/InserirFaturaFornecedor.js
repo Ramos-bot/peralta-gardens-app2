@@ -16,9 +16,9 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useFornecedores } from '../../context/FornecedoresContext';
-import { useFaturasFornecedor } from '../../context/FaturasFornecedorContext';
-import { FaturaOCRService } from '../../services/FaturaOCRService';
+import { useFornecedores } from '../context/FornecedoresContext';
+import { useFaturasFornecedor } from '../context/FaturasFornecedorContext';
+import { FaturaOCRService } from '../services/FaturaOCRService';
 import DuplicateDetectionModal from '../../components/DuplicateDetectionModal';
 
 export default function InserirFaturaFornecedor({ navigation }) {

@@ -11,7 +11,7 @@ import {
   Linking
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useFaturasFornecedor } from '../../context/FaturasFornecedorContext';
+import { useFaturasFornecedor } from '../context/FaturasFornecedorContext';
 
 export default function DetalhesFaturaFornecedor({ route, navigation }) {
   const { faturaId } = route.params;

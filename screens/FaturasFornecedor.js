@@ -12,8 +12,8 @@ import {
   Image
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useFaturasFornecedor } from '../../context/FaturasFornecedorContext';
-import { useFornecedores } from '../../context/FornecedoresContext';
+import { useFaturasFornecedor } from '../context/FaturasFornecedorContext';
+import { useFornecedores } from '../context/FornecedoresContext';
 
 export default function FaturasFornecedor({ navigation }) {
   const { faturas, loading, getEstatisticas, marcarComoPaga, removerFatura, recarregar } = useFaturasFornecedor();

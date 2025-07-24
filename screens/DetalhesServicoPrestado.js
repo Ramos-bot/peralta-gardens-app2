@@ -12,8 +12,8 @@ import {
   Share
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useServicosPrestados } from '../../context/ServicosPrestadosContext';
-import { DocumentoServicoService } from '../../services/DocumentoServicoService';
+import { useServicosPrestados } from '../context/ServicosPrestadosContext';
+import { DocumentoServicoService } from '../services/DocumentoServicoService';
 
 export default function DetalhesServicoPrestado({ route, navigation }) {
   const { servicoId } = route.params;
