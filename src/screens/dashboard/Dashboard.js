@@ -11,7 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTarefas } from '../../../context/TarefasContext';
 import { useClientes } from '../../../context/ClientesContext';
-import { useFaturas } from '../../../context/FaturasContext';
+import { useFaturas } from '../../../context/FaturasContextSimple';
 import { useServicosPrestados } from '../../../context/ServicosPrestadosContext';
 import { useListaCompras } from '../../../context/ListaComprasContext';
 import { useNetworkStatus, useOfflineData } from '../../../hooks/useOfflineData';

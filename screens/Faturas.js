@@ -13,7 +13,7 @@ import {
   ScrollView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useFaturas } from '../context/FaturasContext';
+import { useFaturas } from '../context/FaturasContextSimple';
 
 const Faturas = ({ navigation }) => {
   const { 

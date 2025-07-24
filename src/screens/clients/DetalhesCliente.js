@@ -11,7 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useClientes } from '../../../context/ClientesContext';
 import { useTarefas } from '../../../context/TarefasContext';
-import { useFaturas } from '../../../context/FaturasContext';
+import { useFaturas } from '../../../context/FaturasContextSimple';
 
 export default function DetalhesCliente({ route, navigation }) {
   const { clienteId } = route.params;
