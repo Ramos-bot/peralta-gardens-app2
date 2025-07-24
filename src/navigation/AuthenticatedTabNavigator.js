@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
-import Dashboard from '../../screens/DashboardSimple';
+import Dashboard from '../../screens/DashboardEnhanced';
 import Tarefas from '../screens/tasks/Tarefas';
 import Funcionarios from '../screens/users/Funcionarios';
 import Configuracoes from '../screens/settings/Configuracoes';
