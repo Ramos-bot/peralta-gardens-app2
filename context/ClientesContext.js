@@ -28,6 +28,8 @@ export const ClientesProvider = ({ children }) => {
       notas: 'Cliente preferencial, sempre pontual nos pagamentos.',
       tipo: 'Particular',
       status: 'Ativo',
+      nacionalidade: 'Portugal',
+      lingua_falada: 'Português',
       coordinates: { lat: 38.7169, lng: -9.1395, city: 'Lisboa' }
     },
     {
@@ -40,6 +42,8 @@ export const ClientesProvider = ({ children }) => {
       notas: 'Interessada em plantas ornamentais e projetos de paisagismo.',
       tipo: 'Empresarial',
       status: 'Ativo',
+      nacionalidade: 'Portugal',
+      lingua_falada: 'Português',
       coordinates: { lat: 41.1579, lng: -8.6291, city: 'Porto' }
     },
     {
@@ -52,6 +56,8 @@ export const ClientesProvider = ({ children }) => {
       notas: 'Especializado em cultivo de hortaliças biológicas.',
       tipo: 'Particular',
       status: 'Ativo',
+      nacionalidade: 'Portugal',
+      lingua_falada: 'Português',
       coordinates: { lat: 41.5518, lng: -8.4229, city: 'Braga' }
     }
   ];
@@ -96,7 +102,10 @@ export const ClientesProvider = ({ children }) => {
         ...novoCliente,
         id: String(Date.now()),
         dataCriacao: new Date().toISOString(),
-        status: 'Ativo'
+        status: 'Ativo',
+        // Valores padrão para os novos campos se não fornecidos
+        nacionalidade: novoCliente.nacionalidade || 'Portugal',
+        lingua_falada: novoCliente.lingua_falada || 'Português'
       };
 
       const novosClientes = [cliente, ...clientes];
