@@ -1,5 +1,5 @@
 // styles/DashboardStylesEnhanced.js
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -78,6 +78,15 @@ export default StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
     minHeight: 90,
+    ...(Platform.OS === 'web' && {
+      cursor: 'pointer',
+      transition: 'all 0.2s ease-in-out',
+      ':hover': {
+        transform: 'translateY(-2px)',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.3,
+      }
+    }),
   },
   statNumber: {
     fontSize: 32,
@@ -142,6 +151,13 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
     width: (width - 100) / 4,
+    ...(Platform.OS === 'web' && {
+      cursor: 'pointer',
+      transition: 'all 0.2s ease-in-out',
+      ':hover': {
+        transform: 'scale(1.05)',
+      }
+    }),
   },
   iconCircle: {
     width: 55,
@@ -155,6 +171,9 @@ export default StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3,
+    ...(Platform.OS === 'web' && {
+      transition: 'all 0.2s ease-in-out',
+    }),
   },
   actionLabel: {
     fontSize: 11,
@@ -171,6 +190,14 @@ export default StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
+    ...(Platform.OS === 'web' && {
+      cursor: 'pointer',
+      transition: 'all 0.2s ease-in-out',
+      ':hover': {
+        backgroundColor: '#f8f9fa',
+        paddingLeft: 8,
+      }
+    }),
   },
   taskIcon: {
     width: 36,
