@@ -12,7 +12,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import LabelRecognitionService from '../services/LabelRecognitionService';
+import LabelRecognitionService from '../../services/api/LabelRecognitionService';
 
 const { width, height } = Dimensions.get('window');
 

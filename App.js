@@ -5,12 +5,19 @@ import { StatusBar } from 'expo-status-bar';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { TarefasProvider } from './context/TarefasContext';
 import { ClientesProvider } from './context/ClientesContext';
-import { FaturasProvider } from './context/FaturasContext';
+// import { FaturasProvider } from './context/FaturasContext';
+import { FaturasProvider } from './context/FaturasContextSimple';
+import { FornecedoresProvider } from './context/FornecedoresContext';
+import { FaturasFornecedorProvider } from './context/FaturasFornecedorContext';
+import { ServicosPrestadosProvider } from './context/ServicosPrestadosContext';
+import { ServicosDefinidosProvider } from './context/ServicosDefinidosContext';
+import { ListaComprasProvider } from './context/ListaComprasContext';
 import { ProdutosProvider } from './context/ProdutosContext';
 import { ProdutosFitofarmaceuticosProvider } from './context/ProdutosFitofarmaceuticosContext';
+import { AgendamentosProvider } from './context/AgendamentosContext';
 import NotificationService from './src/services/notifications/NotificationService';
-import { LoginClean } from './src/screens/auth';
-import { AuthenticatedTabNavigator } from './src/navigation';
+import LoginClean from './src/screens/auth/LoginClean';
+import AuthenticatedTabNavigator from './src/navigation/AuthenticatedTabNavigator';
 import { TarefasDia, AdicionarTarefa, EditarTarefa, TarefasCliente } from './src/screens/tasks';
 import { Clientes, DetalhesCliente, EditarCliente, MapaClientes } from './src/screens/clients';
 import { Produtos, AdicionarProduto, DetalhesProduto } from './src/screens/products';
@@ -23,6 +30,36 @@ import {
   RegistrarAplicacao 
 } from './src/screens/phytopharmaceuticals';
 import { Funcionarios } from './src/screens/users';
+
+// Importar telas de faturas
+import Faturas from './screens/Faturas';
+import DetalhesFatura from './screens/DetalhesFatura';
+import AdicionarFatura from './screens/AdicionarFatura';
+import SelecionarClienteFatura from './screens/SelecionarClienteFatura';
+
+// Importar telas de faturas de fornecedor
+import FaturasFornecedor from './screens/FaturasFornecedor';
+import InserirFaturaFornecedor from './screens/InserirFaturaFornecedor';
+import DetalhesFaturaFornecedor from './screens/DetalhesFaturaFornecedor';
+
+// Importar telas de serviços prestados
+import ServicosPrestados from './screens/ServicosPrestados';
+import ServicosDefinidos from './screens/ServicosDefinidos';
+import AdicionarServicoDefinido from './screens/AdicionarServicoDefinido';
+import EditarServicoDefinido from './screens/EditarServicoDefinido';
+import AdicionarServicoPrestado from './screens/AdicionarServicoPrestado';
+import DetalhesServicoPrestado from './screens/DetalhesServicoPrestado';
+import GerarDocumentoServico from './screens/GerarDocumentoServico';
+
+// Importar telas de lista de compras
+import ListaCompras from './screens/ListaCompras';
+import AdicionarItemCompra from './screens/AdicionarItemCompra';
+
+// Importar telas de agendamento inteligente
+import AgendamentoInteligente from './screens/AgendamentoInteligente';
+import CalendarioAgendamentos from './screens/CalendarioAgendamentos';
+import RelatoriosAgendamentos from './screens/RelatoriosAgendamentos';
+import ReagendamentoInteligente from './components/ReagendamentoInteligente';
 
 const Stack = createNativeStackNavigator();
 
@@ -62,7 +99,7 @@ function AppContent() {
             
             // Navegar baseado no tipo de notificação
             const data = response.notification.request.content.data || {};
-            const { type, taskId, clientId } = data;
+            const { type, taskId, clientId, itemId } = data;
             
             console.log('Tipo de notificação:', type);
             console.log('Dados da notificação:', data);
@@ -77,6 +114,13 @@ function AppContent() {
                   break;
                 case 'new_client':
                   navigationRef.current.navigate('DetalhesCliente', { clienteId });
+                  break;
+                case 'shopping_list_item_added':
+                case 'shopping_list_item_updated':
+                case 'shopping_list_item_bought':
+                case 'shopping_list_high_priority':
+                  console.log('Navegando para Lista de Compras devido a notificação');
+                  navigationRef.current.navigate('ListaCompras');
                   break;
                 case 'daily_reminder':
                   console.log('Navegando para Main devido a daily reminder');
@@ -106,10 +150,16 @@ function AppContent() {
 
   return (
     <FaturasProvider>
-      <ClientesProvider>
-        <TarefasProvider>
-          <ProdutosProvider>
-            <ProdutosFitofarmaceuticosProvider>
+      <FornecedoresProvider>
+        <FaturasFornecedorProvider>
+          <ServicosPrestadosProvider>
+            <ServicosDefinidosProvider>
+              <ListaComprasProvider>
+                <AgendamentosProvider>
+                  <ClientesProvider>
+                    <TarefasProvider>
+                      <ProdutosProvider>
+                        <ProdutosFitofarmaceuticosProvider>
               <NavigationContainer 
                 ref={navigationRef}
                 onStateChange={(state) => {
@@ -256,6 +306,122 @@ function AppContent() {
                       component={Configuracoes}
                       options={{ title: 'Configurações' }}
                     />
+                    {/* Telas de Notas de Despesa */}
+                    <Stack.Screen 
+                      name="Faturas" 
+                      component={Faturas}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="DetalhesFatura" 
+                      component={DetalhesFatura}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="SelecionarClienteFatura" 
+                      component={SelecionarClienteFatura}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="AdicionarFatura" 
+                      component={AdicionarFatura}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="EditarFatura" 
+                      component={AdicionarFatura}
+                      options={{ headerShown: false }}
+                    />
+                    {/* Telas de Faturas de Fornecedor */}
+                    <Stack.Screen 
+                      name="FaturasFornecedor" 
+                      component={FaturasFornecedor}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="InserirFaturaFornecedor" 
+                      component={InserirFaturaFornecedor}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="DetalhesFaturaFornecedor" 
+                      component={DetalhesFaturaFornecedor}
+                      options={{ headerShown: false }}
+                    />
+                    {/* Telas de Serviços Prestados */}
+                    <Stack.Screen 
+                      name="ServicosPrestados" 
+                      component={ServicosPrestados}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="AdicionarServicoPrestado" 
+                      component={AdicionarServicoPrestado}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="DetalhesServicoPrestado" 
+                      component={DetalhesServicoPrestado}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="GerarDocumentoServico" 
+                      component={GerarDocumentoServico}
+                      options={{ headerShown: false }}
+                    />
+                    {/* Telas de Serviços Definidos */}
+                    <Stack.Screen 
+                      name="ServicosDefinidos" 
+                      component={ServicosDefinidos}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="AdicionarServicoDefinido" 
+                      component={AdicionarServicoDefinido}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="EditarServicoDefinido" 
+                      component={EditarServicoDefinido}
+                      options={{ headerShown: false }}
+                    />
+                    {/* Telas de Lista de Compras */}
+                    <Stack.Screen 
+                      name="ListaCompras" 
+                      component={ListaCompras}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="AdicionarItemCompra" 
+                      component={AdicionarItemCompra}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="EditarItemCompra" 
+                      component={AdicionarItemCompra}
+                      options={{ headerShown: false }}
+                    />
+                    {/* Telas de Agendamento Inteligente */}
+                    <Stack.Screen 
+                      name="AgendamentoInteligente" 
+                      component={AgendamentoInteligente}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="CalendarioAgendamentos" 
+                      component={CalendarioAgendamentos}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="RelatoriosAgendamentos" 
+                      component={RelatoriosAgendamentos}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen 
+                      name="ReagendamentoInteligente" 
+                      component={ReagendamentoInteligente}
+                      options={{ headerShown: false }}
+                    />
                     {/* Screen temporário para capturar navegação para Tarefas */}
                     <Stack.Screen 
                       name="Tarefas" 
@@ -272,10 +438,16 @@ function AppContent() {
                 )}
               </Stack.Navigator>
             </NavigationContainer>
-            </ProdutosFitofarmaceuticosProvider>
-          </ProdutosProvider>
-        </TarefasProvider>
-      </ClientesProvider>
+                        </ProdutosFitofarmaceuticosProvider>
+                      </ProdutosProvider>
+                    </TarefasProvider>
+                  </ClientesProvider>
+                </AgendamentosProvider>
+              </ListaComprasProvider>
+            </ServicosDefinidosProvider>
+          </ServicosPrestadosProvider>
+        </FaturasFornecedorProvider>
+      </FornecedoresProvider>
     </FaturasProvider>
   );
 }

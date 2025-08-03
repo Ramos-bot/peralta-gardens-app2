@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import AuthService from '../../services/auth/AuthService';
 import { ProtectedComponent, UserInfo } from '../../components/common/PermissionControl';
 

@@ -145,6 +145,58 @@ class NotificationService {
     return this.scheduleNotification(title, body, data);
   }
 
+  // Notificações para Lista de Compras
+  async notifyShoppingListItemAdded(item, userName = 'Utilizador') {
+    const title = '🛒 Novo Item na Lista';
+    const body = `${userName} adicionou "${item.nome}" à lista de compras`;
+    const data = { 
+      type: 'shopping_list_item_added', 
+      itemId: item.id,
+      itemName: item.nome,
+      priority: item.prioridadeCompra 
+    };
+
+    return this.scheduleNotification(title, body, data);
+  }
+
+  async notifyShoppingListItemUpdated(item, userName = 'Utilizador') {
+    const title = '📝 Item Atualizado';
+    const body = `${userName} editou "${item.nome}" na lista de compras`;
+    const data = { 
+      type: 'shopping_list_item_updated', 
+      itemId: item.id,
+      itemName: item.nome,
+      priority: item.prioridadeCompra 
+    };
+
+    return this.scheduleNotification(title, body, data);
+  }
+
+  async notifyShoppingListItemBought(item, userName = 'Utilizador') {
+    const title = '✅ Item Comprado';
+    const body = `${userName} marcou "${item.nome}" como comprado`;
+    const data = { 
+      type: 'shopping_list_item_bought', 
+      itemId: item.id,
+      itemName: item.nome 
+    };
+
+    return this.scheduleNotification(title, body, data);
+  }
+
+  async notifyShoppingListHighPriorityItems(highPriorityCount) {
+    if (highPriorityCount === 0) return;
+
+    const title = '🚨 Itens Prioritários';
+    const body = `Existem ${highPriorityCount} itens de alta prioridade na lista de compras`;
+    const data = { 
+      type: 'shopping_list_high_priority',
+      count: highPriorityCount 
+    };
+
+    return this.scheduleNotification(title, body, data);
+  }
+
   // Notificação diária de resumo
   async scheduleDailyReminder() {
     const title = '🌱 Peralta Gardens';

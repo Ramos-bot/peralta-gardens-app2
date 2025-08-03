@@ -12,7 +12,7 @@ import {
   FlatList
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useProdutos } from '../../context/ProdutosContext';
+import { useProdutos } from '../../../context/ProdutosContext';
 
 const Produtos = ({ navigation }) => {
   const {

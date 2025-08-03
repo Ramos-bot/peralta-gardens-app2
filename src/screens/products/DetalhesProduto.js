@@ -12,7 +12,7 @@ import {
   TextInput
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useProdutos } from '../../context/ProdutosContext';
+import { useProdutos } from '../../../context/ProdutosContext';
 
 const DetalhesProduto = ({ route, navigation }) => {
   const { produto: produtoParam } = route.params;

@@ -9,10 +9,12 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useTarefas } from '../../context/TarefasContext';
-import { useClientes } from '../../context/ClientesContext';
-import { useFaturas } from '../../context/FaturasContext';
-import { useNetworkStatus, useOfflineData } from '../hooks/useOfflineData';
+import { useTarefas } from '../../../context/TarefasContext';
+import { useClientes } from '../../../context/ClientesContext';
+import { useFaturas } from '../../../context/FaturasContextSimple';
+import { useServicosPrestados } from '../../../context/ServicosPrestadosContext';
+import { useListaCompras } from '../../../context/ListaComprasContext';
+import { useNetworkStatus, useOfflineData } from '../../../hooks/useOfflineData';
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
 
 const { width } = Dimensions.get('window');
@@ -20,7 +22,9 @@ const { width } = Dimensions.get('window');
 export default function Dashboard({ navigation }) {
   const { tarefas, getTarefasDeHoje, funcionarios, loading } = useTarefas();
   const { clientes, getEstatisticas } = useClientes();
-  const { faturas, getEstatisticasFaturas } = useFaturas();
+  const { faturas, getEstatisticas: getEstatisticasFaturas } = useFaturas();
+  const { servicos, getEstatisticas: getEstatisticasServicos } = useServicosPrestados();
+  const { getEstatisticas: getEstatisticasCompras } = useListaCompras();
   const { isOnline } = useNetworkStatus();
   const { pendingSyncCount, getTimeSinceLastSync } = useOfflineData();
   const [refreshing, setRefreshing] = useState(false);
@@ -38,6 +42,8 @@ export default function Dashboard({ navigation }) {
   const tarefasHoje = getTarefasDeHoje();
   const estatisticasClientes = getEstatisticas();
   const estatisticasFaturas = getEstatisticasFaturas();
+  const estatisticasServicos = getEstatisticasServicos();
+  const estatisticasCompras = getEstatisticasCompras();
   const tarefasPendentes = tarefas.filter(t => !t.concluida).length;
   const funcionariosAtivos = funcionarios.length;
 
@@ -228,20 +234,186 @@ export default function Dashboard({ navigation }) {
       }
     },
     {
-      title: 'Faturação Total',
+      title: 'Notas de Despesa',
       icon: 'card-outline',
       count: `€${estatisticasFaturas.valorTotal.toFixed(0)}`,
-      subtitle: `${estatisticasFaturas.pagas} pagas`,
+      subtitle: `${estatisticasFaturas.faturasPagas} pagas`,
       color: '#4caf50',
-      onPress: () => {}
+      onPress: () => {
+        try {
+          navigation.navigate('Faturas');
+        } catch (error) {
+          console.error('Erro ao navegar para Faturas:', error);
+        }
+      }
+    },
+    {
+      title: '+ Nova Nota de Despesa',
+      icon: 'add-circle-outline',
+      count: 'NEW',
+      subtitle: 'Criar nova fatura',
+      color: '#2e7d32',
+      onPress: () => {
+        try {
+          navigation.navigate('SelecionarClienteFatura');
+        } catch (error) {
+          console.error('Erro ao navegar para SelecionarClienteFatura:', error);
+        }
+      }
+    },
+    {
+      title: 'Faturas de Fornecedor',
+      icon: 'receipt-outline',
+      count: 'FF',
+      subtitle: 'Gestão de faturas',
+      color: '#9C27B0',
+      onPress: () => {
+        try {
+          navigation.navigate('FaturasFornecedor');
+        } catch (error) {
+          console.error('Erro ao navegar para FaturasFornecedor:', error);
+        }
+      }
+    },
+    {
+      title: '+ Inserir Fatura',
+      icon: 'add-circle-outline',
+      count: 'OCR',
+      subtitle: 'Tirar foto ou manual',
+      color: '#FF5722',
+      onPress: () => {
+        try {
+          navigation.navigate('InserirFaturaFornecedor');
+        } catch (error) {
+          console.error('Erro ao navegar para InserirFaturaFornecedor:', error);
+        }
+      }
     },
     {
       title: 'Por Receber',
       icon: 'time-outline',
       count: `€${estatisticasFaturas.valorPendente.toFixed(0)}`,
-      subtitle: `${estatisticasFaturas.pendentes} pendentes`,
+      subtitle: `${estatisticasFaturas.faturasPendentes} pendentes`,
       color: '#f44336',
-      onPress: () => {}
+      onPress: () => {
+        try {
+          navigation.navigate('Faturas');
+        } catch (error) {
+          console.error('Erro ao navegar para Faturas:', error);
+        }
+      }
+    },
+    {
+      title: 'Serviços Definidos',
+      icon: 'library-outline',
+      count: 'SD',
+      subtitle: 'Gerir lista de serviços',
+      color: '#673AB7',
+      onPress: () => {
+        try {
+          navigation.navigate('ServicosDefinidos');
+        } catch (error) {
+          console.error('Erro ao navegar para ServicosDefinidos:', error);
+        }
+      }
+    },
+    {
+      title: 'Serviços Prestados',
+      icon: 'construct-outline',
+      count: `${estatisticasServicos.totalServicos}`,
+      subtitle: `€${estatisticasServicos.valorTotal.toFixed(0)} total`,
+      color: '#795548',
+      onPress: () => {
+        try {
+          navigation.navigate('ServicosPrestados');
+        } catch (error) {
+          console.error('Erro ao navegar para ServicosPrestados:', error);
+        }
+      }
+    },
+    {
+      title: '+ Novo Serviço',
+      icon: 'add-outline',
+      count: 'PDF',
+      subtitle: 'Documentar serviço',
+      color: '#607D8B',
+      onPress: () => {
+        try {
+          navigation.navigate('AdicionarServicoPrestado');
+        } catch (error) {
+          console.error('Erro ao navegar para AdicionarServicoPrestado:', error);
+        }
+      }
+    },
+    {
+      title: 'Serviços Pendentes',
+      icon: 'time-outline',
+      count: `${estatisticasServicos.servicosPendentes}`,
+      subtitle: 'A documentar',
+      color: '#FF6F00',
+      onPress: () => {
+        try {
+          navigation.navigate('ServicosPrestados', { filtro: 'Pendente' });
+        } catch (error) {
+          console.error('Erro ao navegar para ServicosPrestados com filtro:', error);
+        }
+      }
+    },
+    {
+      title: 'Lista de Compras',
+      icon: 'bag-outline',
+      count: `${estatisticasCompras.totalItens}`,
+      subtitle: `${estatisticasCompras.itensPendentes} pendentes`,
+      color: '#3F51B5',
+      onPress: () => {
+        try {
+          navigation.navigate('ListaCompras');
+        } catch (error) {
+          console.error('Erro ao navegar para ListaCompras:', error);
+        }
+      }
+    },
+    {
+      title: 'Novo Agendamento',
+      icon: 'calendar-outline',
+      count: 'IA',
+      subtitle: 'Agendamento inteligente',
+      color: '#9c27b0',
+      onPress: () => {
+        try {
+          navigation.navigate('AgendamentoInteligente');
+        } catch (error) {
+          console.error('Erro ao navegar para AgendamentoInteligente:', error);
+        }
+      }
+    },
+    {
+      title: 'Calendário',
+      icon: 'calendar',
+      count: new Date().getDate().toString(),
+      subtitle: 'Ver agendamentos',
+      color: '#ff9800',
+      onPress: () => {
+        try {
+          navigation.navigate('CalendarioAgendamentos');
+        } catch (error) {
+          console.error('Erro ao navegar para CalendarioAgendamentos:', error);
+        }
+      }
+    },
+    {
+      title: 'Relatórios',
+      icon: 'analytics-outline',
+      count: 'BI',
+      subtitle: 'Análise de dados',
+      color: '#607d8b',
+      onPress: () => {
+        try {
+          navigation.navigate('RelatoriosAgendamentos');
+        } catch (error) {
+          console.error('Erro ao navegar para RelatoriosAgendamentos:', error);
+        }
+      }
     }
   ];
 
@@ -265,7 +437,7 @@ export default function Dashboard({ navigation }) {
     },
     {
       id: '2', 
-      activity: 'Fatura paga - €150,00',
+      activity: 'Nota de despesa paga - €150,00',
       icon: 'card',
       color: '#2196f3',
       time: '1h'

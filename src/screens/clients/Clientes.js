@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useClientes } from '../../context/ClientesContext';
+import { useClientes } from '../../../context/ClientesContext';
 
 export default function Clientes({ navigation }) {
   const { 
@@ -34,9 +34,36 @@ export default function Clientes({ navigation }) {
   const [novaMorada, setNovaMorada] = useState('');
   const [novoEmail, setNovoEmail] = useState('');
   const [novoTipo, setNovoTipo] = useState('Particular');
+  const [novaNacionalidade, setNovaNacionalidade] = useState('Portugal');
+  const [novaLinguaFalada, setNovaLinguaFalada] = useState('Português');
   const [showTipoModal, setShowTipoModal] = useState(false);
+  const [showNacionalidadeModal, setShowNacionalidadeModal] = useState(false);
+  const [showLinguaModal, setShowLinguaModal] = useState(false);
 
   const tipoOpcoes = ['Particular', 'Empresarial'];
+  const nacionalidadeOpcoes = [
+    'Portugal', 
+    'Reino Unido', 
+    'França', 
+    'Espanha', 
+    'Alemanha', 
+    'Itália', 
+    'Brasil', 
+    'Estados Unidos',
+    'Holanda',
+    'Bélgica',
+    'Suíça',
+    'Outra'
+  ];
+  const linguaOpcoes = [
+    'Português', 
+    'Inglês', 
+    'Francês', 
+    'Espanhol', 
+    'Alemão', 
+    'Italiano',
+    'Holandês'
+  ];
 
   // Atualizar lista filtrada quando clientes ou busca mudarem
   useEffect(() => {
@@ -70,6 +97,8 @@ export default function Clientes({ navigation }) {
       morada: novaMorada.trim(),
       email: novoEmail.trim(),
       tipo: novoTipo,
+      nacionalidade: novaNacionalidade,
+      lingua_falada: novaLinguaFalada,
       notas: '' // Adicionado campo notas vazio
     };
 
@@ -82,6 +111,8 @@ export default function Clientes({ navigation }) {
       setNovaMorada('');
       setNovoEmail('');
       setNovoTipo('Particular');
+      setNovaNacionalidade('Portugal');
+      setNovaLinguaFalada('Português');
       setShowAddModal(false);
       Alert.alert('Sucesso!', 'Cliente adicionado com sucesso');
     } else {
@@ -408,6 +439,42 @@ export default function Clientes({ navigation }) {
                 </TouchableOpacity>
               </View>
 
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Nacionalidade</Text>
+                <TouchableOpacity 
+                  style={styles.selectorButton}
+                  onPress={() => setShowNacionalidadeModal(true)}
+                >
+                  <View style={styles.selectorContent}>
+                    <Ionicons 
+                      name="flag-outline" 
+                      size={20} 
+                      color="#666" 
+                    />
+                    <Text style={styles.selectorText}>{novaNacionalidade}</Text>
+                  </View>
+                  <Ionicons name="chevron-down" size={20} color="#666" />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Língua Falada</Text>
+                <TouchableOpacity 
+                  style={styles.selectorButton}
+                  onPress={() => setShowLinguaModal(true)}
+                >
+                  <View style={styles.selectorContent}>
+                    <Ionicons 
+                      name="language-outline" 
+                      size={20} 
+                      color="#666" 
+                    />
+                    <Text style={styles.selectorText}>{novaLinguaFalada}</Text>
+                  </View>
+                  <Ionicons name="chevron-down" size={20} color="#666" />
+                </TouchableOpacity>
+              </View>
+
               <TouchableOpacity style={styles.saveButton} onPress={handleAddCliente}>
                 <Ionicons name="person-add" size={24} color="#fff" />
                 <Text style={styles.saveButtonText}>Adicionar Cliente</Text>
@@ -455,6 +522,100 @@ export default function Clientes({ navigation }) {
                   {opcao}
                 </Text>
                 {novoTipo === opcao && (
+                  <Ionicons name="checkmark" size={20} color="#2e7d32" />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Modal Nacionalidade */}
+      <Modal
+        visible={showNacionalidadeModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowNacionalidadeModal(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1}
+          onPress={() => setShowNacionalidadeModal(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Nacionalidade</Text>
+            <ScrollView style={{ maxHeight: 300 }}>
+              {nacionalidadeOpcoes.map((opcao) => (
+                <TouchableOpacity
+                  key={opcao}
+                  style={[
+                    styles.modalOption,
+                    novaNacionalidade === opcao && styles.selectedOption
+                  ]}
+                  onPress={() => {
+                    setNovaNacionalidade(opcao);
+                    setShowNacionalidadeModal(false);
+                  }}
+                >
+                  <Ionicons 
+                    name="flag-outline" 
+                    size={20} 
+                    color={novaNacionalidade === opcao ? '#2e7d32' : '#666'} 
+                  />
+                  <Text style={[
+                    styles.modalOptionText,
+                    novaNacionalidade === opcao && styles.selectedOptionText
+                  ]}>
+                    {opcao}
+                  </Text>
+                  {novaNacionalidade === opcao && (
+                    <Ionicons name="checkmark" size={20} color="#2e7d32" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Modal Língua Falada */}
+      <Modal
+        visible={showLinguaModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowLinguaModal(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1}
+          onPress={() => setShowLinguaModal(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Língua Falada</Text>
+            {linguaOpcoes.map((opcao) => (
+              <TouchableOpacity
+                key={opcao}
+                style={[
+                  styles.modalOption,
+                  novaLinguaFalada === opcao && styles.selectedOption
+                ]}
+                onPress={() => {
+                  setNovaLinguaFalada(opcao);
+                  setShowLinguaModal(false);
+                }}
+              >
+                <Ionicons 
+                  name="language-outline" 
+                  size={20} 
+                  color={novaLinguaFalada === opcao ? '#2e7d32' : '#666'} 
+                />
+                <Text style={[
+                  styles.modalOptionText,
+                  novaLinguaFalada === opcao && styles.selectedOptionText
+                ]}>
+                  {opcao}
+                </Text>
+                {novaLinguaFalada === opcao && (
                   <Ionicons name="checkmark" size={20} color="#2e7d32" />
                 )}
               </TouchableOpacity>

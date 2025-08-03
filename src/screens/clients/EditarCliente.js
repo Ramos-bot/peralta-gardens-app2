@@ -10,7 +10,7 @@ import {
   Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useClientes } from '../../context/ClientesContext';
+import { useClientes } from '../../../context/ClientesContext';
 
 export default function EditarCliente({ route, navigation }) {
   const { cliente } = route.params;
@@ -24,11 +24,38 @@ export default function EditarCliente({ route, navigation }) {
   const [notas, setNotas] = useState(cliente.notas || '');
   const [tipo, setTipo] = useState(cliente.tipo);
   const [status, setStatus] = useState(cliente.status);
+  const [nacionalidade, setNacionalidade] = useState(cliente.nacionalidade || 'Portugal');
+  const [linguaFalada, setLinguaFalada] = useState(cliente.lingua_falada || 'Português');
   const [showTipoModal, setShowTipoModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showNacionalidadeModal, setShowNacionalidadeModal] = useState(false);
+  const [showLinguaModal, setShowLinguaModal] = useState(false);
 
   const tipoOpcoes = ['Particular', 'Empresarial'];
   const statusOpcoes = ['Ativo', 'Inativo'];
+  const nacionalidadeOpcoes = [
+    'Portugal', 
+    'Reino Unido', 
+    'França', 
+    'Espanha', 
+    'Alemanha', 
+    'Itália', 
+    'Brasil', 
+    'Estados Unidos',
+    'Holanda',
+    'Bélgica',
+    'Suíça',
+    'Outra'
+  ];
+  const linguaOpcoes = [
+    'Português', 
+    'Inglês', 
+    'Francês', 
+    'Espanhol', 
+    'Alemão', 
+    'Italiano',
+    'Holandês'
+  ];
 
   const handleSave = async () => {
     // Validação dos campos obrigatórios
@@ -55,6 +82,8 @@ export default function EditarCliente({ route, navigation }) {
       notas: notas.trim(),
       tipo,
       status,
+      nacionalidade,
+      lingua_falada: linguaFalada,
     };
 
     const success = await updateCliente(cliente.id, clienteAtualizado);
@@ -201,6 +230,22 @@ export default function EditarCliente({ route, navigation }) {
             () => setShowStatusModal(true),
             status === 'Ativo' ? 'checkmark-circle' : 'close-circle'
           )}
+
+          {renderSelector(
+            'Nacionalidade',
+            nacionalidade,
+            nacionalidadeOpcoes,
+            () => setShowNacionalidadeModal(true),
+            'flag-outline'
+          )}
+
+          {renderSelector(
+            'Língua Falada',
+            linguaFalada,
+            linguaOpcoes,
+            () => setShowLinguaModal(true),
+            'language-outline'
+          )}
         </View>
 
         {/* Notas */}
@@ -319,6 +364,100 @@ export default function EditarCliente({ route, navigation }) {
                   {opcao}
                 </Text>
                 {status === opcao && (
+                  <Ionicons name="checkmark" size={20} color="#2e7d32" />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Modal Nacionalidade */}
+      <Modal
+        visible={showNacionalidadeModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowNacionalidadeModal(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1}
+          onPress={() => setShowNacionalidadeModal(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Nacionalidade</Text>
+            <ScrollView style={{ maxHeight: 300 }}>
+              {nacionalidadeOpcoes.map((opcao) => (
+                <TouchableOpacity
+                  key={opcao}
+                  style={[
+                    styles.modalOption,
+                    nacionalidade === opcao && styles.selectedOption
+                  ]}
+                  onPress={() => {
+                    setNacionalidade(opcao);
+                    setShowNacionalidadeModal(false);
+                  }}
+                >
+                  <Ionicons 
+                    name="flag-outline" 
+                    size={20} 
+                    color={nacionalidade === opcao ? '#2e7d32' : '#666'} 
+                  />
+                  <Text style={[
+                    styles.modalOptionText,
+                    nacionalidade === opcao && styles.selectedOptionText
+                  ]}>
+                    {opcao}
+                  </Text>
+                  {nacionalidade === opcao && (
+                    <Ionicons name="checkmark" size={20} color="#2e7d32" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Modal Língua Falada */}
+      <Modal
+        visible={showLinguaModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowLinguaModal(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1}
+          onPress={() => setShowLinguaModal(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Língua Falada</Text>
+            {linguaOpcoes.map((opcao) => (
+              <TouchableOpacity
+                key={opcao}
+                style={[
+                  styles.modalOption,
+                  linguaFalada === opcao && styles.selectedOption
+                ]}
+                onPress={() => {
+                  setLinguaFalada(opcao);
+                  setShowLinguaModal(false);
+                }}
+              >
+                <Ionicons 
+                  name="language-outline" 
+                  size={20} 
+                  color={linguaFalada === opcao ? '#2e7d32' : '#666'} 
+                />
+                <Text style={[
+                  styles.modalOptionText,
+                  linguaFalada === opcao && styles.selectedOptionText
+                ]}>
+                  {opcao}
+                </Text>
+                {linguaFalada === opcao && (
                   <Ionicons name="checkmark" size={20} color="#2e7d32" />
                 )}
               </TouchableOpacity>

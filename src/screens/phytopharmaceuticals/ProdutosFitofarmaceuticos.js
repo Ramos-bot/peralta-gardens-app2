@@ -10,7 +10,7 @@ import {
   ScrollView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useProdutosFitofarmaceuticos } from '../../context/ProdutosFitofarmaceuticosContext';
+import { useProdutosFitofarmaceuticos } from '../../../context/ProdutosFitofarmaceuticosContext';
 import LabelRecognitionModal from '../../components/modals/LabelRecognitionModal';
 
 export default function ProdutosFitofarmaceuticos({ navigation }) {

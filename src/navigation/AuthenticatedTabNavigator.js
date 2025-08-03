@@ -2,13 +2,13 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
-import { Dashboard } from '../screens/dashboard';
-import { Tarefas } from '../screens/tasks';
-import { Funcionarios } from '../screens/users';
-import { Configuracoes } from '../screens/settings';
-import { Produtos } from '../screens/products';
-import { Clientes } from '../screens/clients';
-import { ProdutosFitofarmaceuticos } from '../screens/phytopharmaceuticals';
+import Dashboard from '../../screens/DashboardEnhanced';
+import Tarefas from '../screens/tasks/Tarefas';
+import Funcionarios from '../screens/users/Funcionarios';
+import Configuracoes from '../screens/settings/Configuracoes';
+import Produtos from '../screens/products/Produtos';
+import Clientes from '../screens/clients/Clientes';
+import ProdutosFitofarmaceuticos from '../screens/phytopharmaceuticals/ProdutosFitofarmaceuticos';
 
 const Tab = createBottomTabNavigator();
 

@@ -9,7 +9,7 @@ import {
   Alert
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import { ProtectedComponent } from '../../components/common/PermissionControl';
 
 export default function Configuracoes({ navigation }) {

@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   Image
 } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function LoginClean() {
   const [username, setUsername] = useState('');
@@ -51,7 +51,7 @@ export default function LoginClean() {
       <View style={styles.innerContainer}>
         <View style={styles.logoContainer}>
           <Image
-            source={require('../logo/logo1.png')}
+            source={require('../../../logo/logo1.png')}
             style={styles.logo}
             resizeMode="contain"
           />

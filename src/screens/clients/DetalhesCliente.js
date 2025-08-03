@@ -9,9 +9,9 @@ import {
   Linking,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useClientes } from '../../context/ClientesContext';
-import { useTarefas } from '../../context/TarefasContext';
-import { useFaturas } from '../../context/FaturasContext';
+import { useClientes } from '../../../context/ClientesContext';
+import { useTarefas } from '../../../context/TarefasContext';
+import { useFaturas } from '../../../context/FaturasContextSimple';
 
 export default function DetalhesCliente({ route, navigation }) {
   const { clienteId } = route.params;
@@ -187,6 +187,30 @@ export default function DetalhesCliente({ route, navigation }) {
               </View>
             </View>
           </View>
+
+          {cliente.nacionalidade && (
+            <View style={styles.contactItem}>
+              <View style={styles.contactLeft}>
+                <Ionicons name="flag" size={22} color="#2e7d32" />
+                <View style={styles.contactInfo}>
+                  <Text style={styles.contactLabel}>Nacionalidade</Text>
+                  <Text style={styles.contactValue}>{cliente.nacionalidade}</Text>
+                </View>
+              </View>
+            </View>
+          )}
+
+          {cliente.lingua_falada && (
+            <View style={styles.contactItem}>
+              <View style={styles.contactLeft}>
+                <Ionicons name="language" size={22} color="#2e7d32" />
+                <View style={styles.contactInfo}>
+                  <Text style={styles.contactLabel}>Língua Falada</Text>
+                  <Text style={styles.contactValue}>{cliente.lingua_falada}</Text>
+                </View>
+              </View>
+            </View>
+          )}
         </View>
 
         {/* Acções Rápidas */}

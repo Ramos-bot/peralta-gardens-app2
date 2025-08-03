@@ -10,7 +10,7 @@ import {
   Modal
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useOfflineData, useNetworkStatus, useSyncStats } from '../hooks/useOfflineData';
+import { useOfflineData, useNetworkStatus, useSyncStats } from '../../../hooks/useOfflineData';
 
 const ModoOffline = ({ navigation }) => {
   const {

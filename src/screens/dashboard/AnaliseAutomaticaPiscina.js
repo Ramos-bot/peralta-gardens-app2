@@ -14,7 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import PoolMLService from '../../services/PoolMLService';
+import PoolMLService from '../../../services/PoolMLService';
 
 const STORAGE_KEY_POOL_DATA = '@peralta_gardens_pool_data';
 const STORAGE_KEY_ANALYSIS_HISTORY = '@peralta_gardens_analysis_history';
