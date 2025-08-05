@@ -14,6 +14,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTarefas } from '../../../context/TarefasContext';
 import { useClientes } from '../../../context/ClientesContext';
+import { TooltipTouchableOpacity } from '../../../components/GlobalTooltipWrapper';
+import { useWebTooltip } from '../../../hooks/useWebTooltip';
 
 export default function Tarefas({ navigation }) {
   const { tarefas, toggleTarefaConcluida, deleteTarefa, loading, funcionarios } = useTarefas();
@@ -120,10 +122,11 @@ export default function Tarefas({ navigation }) {
     >
       <View style={styles.tarefaHeader}>
         <View style={styles.leftSection}>
-          <TouchableOpacity 
+          <TooltipTouchableOpacity 
             style={styles.checkboxContainer}
             onPress={() => toggleTarefaConcluida(item.id)}
             activeOpacity={0.7}
+            tooltip={item.concluida ? "Marcar como pendente" : "Marcar como concluída"}
           >
             <View style={[
               styles.checkbox,
@@ -137,7 +140,7 @@ export default function Tarefas({ navigation }) {
                 />
               )}
             </View>
-          </TouchableOpacity>
+          </TooltipTouchableOpacity>
           <View style={styles.prioridadeContainer}>
             <View 
               style={[
@@ -151,12 +154,13 @@ export default function Tarefas({ navigation }) {
           </View>
         </View>
         <View style={styles.actionsContainer}>
-          <TouchableOpacity 
+          <TooltipTouchableOpacity 
             onPress={() => handleEditTarefa(item)}
             style={styles.actionButton}
+            tooltip="Editar tarefa"
           >
             <Ionicons name="pencil" size={20} color="#666" />
-          </TouchableOpacity>
+          </TooltipTouchableOpacity>
           <TouchableOpacity 
             onPress={() => handleDeleteTarefa(item)}
             style={styles.actionButton}
@@ -228,12 +232,13 @@ export default function Tarefas({ navigation }) {
             </View>
             
             {/* Botão de filtros avançados */}
-            <TouchableOpacity 
+            <TooltipTouchableOpacity 
               style={[
                 styles.advancedFilterButton,
                 contarFiltrosAtivos() > 0 && styles.advancedFilterButtonActive
               ]}
               onPress={() => setShowFiltrosAvancados(true)}
+              tooltip="Abrir filtros avançados para refinar a busca"
             >
               <Ionicons name="options" size={20} color={contarFiltrosAtivos() > 0 ? "#fff" : "#666"} />
               {contarFiltrosAtivos() > 0 && (
@@ -241,7 +246,7 @@ export default function Tarefas({ navigation }) {
                   <Text style={styles.filterBadgeText}>{contarFiltrosAtivos()}</Text>
                 </View>
               )}
-            </TouchableOpacity>
+            </TooltipTouchableOpacity>
           </View>
 
           <View style={styles.filterContainer}>
@@ -274,13 +279,14 @@ export default function Tarefas({ navigation }) {
             contentContainerStyle={{ paddingBottom: 80 }}
           />
 
-          <TouchableOpacity 
+          <TooltipTouchableOpacity 
             style={styles.addButton} 
             activeOpacity={0.8}
             onPress={() => navigation.navigate('AdicionarTarefa')}
+            tooltip="Adicionar nova tarefa de jardinagem"
           >
             <Ionicons name="add" size={24} color="white" />
-          </TouchableOpacity>
+          </TooltipTouchableOpacity>
         </>
       )}
 

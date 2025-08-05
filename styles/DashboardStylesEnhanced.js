@@ -21,6 +21,21 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  appLogo: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 8,
+  },
+  companyLogo: {
+    width: 80,
+    height: 40,
+    resizeMode: 'contain',
+  },
   headerText: {
     marginLeft: 15,
     flex: 1,
@@ -65,11 +80,13 @@ export default StyleSheet.create({
     marginTop: -15,
     marginBottom: 20,
   },
-  statCard: {
+  statCardWrapper: {
     width: (width - 48) / 2,
+    marginBottom: 12,
+  },
+  statCard: {
     padding: 18,
     borderRadius: 15,
-    marginBottom: 12,
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
@@ -265,5 +282,14 @@ export default StyleSheet.create({
     color: '#666',
     marginBottom: 8,
     paddingLeft: 4,
+  },
+
+  // Widget styling
+  widgetTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginLeft: 16,
+    marginBottom: 8,
   },
 });
