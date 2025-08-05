@@ -2,347 +2,245 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
-  ScrollView,
   TouchableOpacity,
+  StyleSheet,
   Switch,
-  Alert
+  ScrollView,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuth } from '../../../context/AuthContext';
-import { ProtectedComponent } from '../../components/common/PermissionControl';
 
-export default function Configuracoes({ navigation }) {
-  const [notificacoes, setNotificacoes] = useState(true);
-  const [modoEscuro, setModoEscuro] = useState(false);
-  const [sincronizacaoAuto, setSincronizacaoAuto] = useState(true);
-  const { logout, user } = useAuth();
-
-  const configuracoes = [
-    {
-      title: 'Conta',
-      items: [
-        {
-          icon: 'person-outline',
-          label: 'Perfil do Usuário',
-          subtitle: `Logado como: ${user?.username} (${user?.role})`,
-          onPress: () => Alert.alert('Perfil', `Usuário: ${user?.username}\nFunção: ${user?.role}\nEmail: ${user?.email}`)
-        },
-        {
-          icon: 'key-outline',
-          label: 'Alterar Senha',
-          onPress: () => Alert.alert('Em Desenvolvimento', 'Funcionalidade em breve!')
-        },
-        {
-          icon: 'people-outline',
-          label: 'Gestão de Utilizadores',
-          subtitle: 'Gerir utilizadores e permissões',
-          onPress: () => navigation.navigate('GestaoUtilizadores'),
-          permission: 'gestao_usuarios'
-        },
-        {
-          icon: 'log-out-outline',
-          label: 'Sair',
-          onPress: () => Alert.alert(
-            'Sair',
-            'Tem certeza que deseja sair?',
-            [
-              { text: 'Cancelar', style: 'cancel' },
-              { text: 'Sair', style: 'destructive', onPress: logout }
-            ]
-          )
-        }
-      ]
-    },
-    {
-      title: 'Notificações',
-      items: [
-        {
-          icon: 'notifications-outline',
-          label: 'Notificações Push',
-          hasSwitch: true,
-          value: notificacoes,
-          onToggle: setNotificacoes
-        }
-      ]
-    },
-    {
-      title: 'Aparência',
-      items: [
-        {
-          icon: 'moon-outline',
-          label: 'Modo Escuro',
-          hasSwitch: true,
-          value: modoEscuro,
-          onToggle: setModoEscuro
-        }
-      ]
-    },
-    {
-      title: 'Dados',
-      items: [
-        {
-          icon: 'cloud-offline-outline',
-          label: 'Modo Offline',
-          subtitle: 'Gerenciar sincronização e dados locais',
-          onPress: () => navigation.navigate('ModoOffline')
-        },
-        {
-          icon: 'sync-outline',
-          label: 'Sincronização Automática',
-          hasSwitch: true,
-          value: sincronizacaoAuto,
-          onToggle: setSincronizacaoAuto
-        },
-        {
-          icon: 'cloud-download-outline',
-          label: 'Backups e Exportação',
-          subtitle: 'Criar backups e exportar dados',
-          onPress: () => navigation.navigate('BackupsExportacao')
-        },
-        {
-          icon: 'trash-outline',
-          label: 'Limpar Cache',
-          onPress: () => Alert.alert(
-            'Limpar Cache',
-            'Tem certeza que deseja limpar o cache do aplicativo?',
-            [
-              { text: 'Cancelar', style: 'cancel' },
-              { text: 'Limpar', style: 'destructive', onPress: () => {
-                Alert.alert('Sucesso', 'Cache limpo com sucesso!');
-              }}
-            ]
-          )
-        }
-      ]
-    },
-    {
-      title: 'Suporte',
-      items: [
-        {
-          icon: 'help-circle-outline',
-          label: 'Central de Ajuda',
-          onPress: () => Alert.alert('Em Desenvolvimento', 'Funcionalidade em breve!')
-        },
-        {
-          icon: 'chatbubble-ellipses-outline',
-          label: 'Fale Conosco',
-          onPress: () => Alert.alert('Em Desenvolvimento', 'Funcionalidade em breve!')
-        },
-        {
-          icon: 'information-circle-outline',
-          label: 'Sobre o App',
-          onPress: () => Alert.alert(
-            'Peralta Gardens App',
-            'Versão 1.0.0\n\nSistema de gestão para jardins e estufas.\n\n© 2025 Peralta Gardens'
-          )
-        }
-      ]
-    }
-  ];
+const Configuracoes = ({ navigation }) => {
+  const [darkMode, setDarkMode] = useState(false);
+  const [notifications, setNotifications] = useState(true);
 
   const handleLogout = () => {
     Alert.alert(
-      'Sair',
-      'Tem certeza que deseja sair da sua conta?',
+      'Confirmar Saída',
+      'Tem certeza que deseja sair da conta?',
       [
         { text: 'Cancelar', style: 'cancel' },
-        { 
-          text: 'Sair', 
-          style: 'destructive', 
-          onPress: () => navigation.reset({
-            index: 0,
-            routes: [{ name: 'Login' }],
-          })
-        }
+        { text: 'Sair', style: 'destructive', onPress: () => {
+          // In a real app, this would call the logout function
+          Alert.alert('Logout', 'Função de logout será implementada');
+        }}
       ]
-    );
-  };
-
-  const renderConfigItem = (item, index) => {
-    // Se o item tem permissão e o usuário não tem essa permissão, não renderiza
-    if (item.permission && !user?.permissions?.includes(item.permission)) {
-      return null;
-    }
-
-    return (
-      <TouchableOpacity
-        key={index}
-        style={styles.configItem}
-        onPress={item.onPress}
-        disabled={item.hasSwitch}
-        activeOpacity={0.8}
-      >
-        <View style={styles.configItemLeft}>
-          <Ionicons name={item.icon} size={22} color="#666" />
-          <View style={styles.configItemText}>
-            <Text style={styles.configItemLabel}>{item.label}</Text>
-            {item.subtitle && <Text style={styles.configItemSubtitle}>{item.subtitle}</Text>}
-          </View>
-        </View>
-        
-        {item.hasSwitch ? (
-          <Switch
-            value={item.value}
-            onValueChange={item.onToggle}
-            trackColor={{ false: '#ddd', true: '#81c784' }}
-            thumbColor={item.value ? '#2e7d32' : '#f4f3f4'}
-          />
-        ) : (
-          <Ionicons name="chevron-forward" size={20} color="#ccc" />
-        )}
-      </TouchableOpacity>
     );
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.userSection}>
-        <View style={styles.userAvatar}>
-          <Text style={styles.userAvatarText}>
-            {user?.username?.substring(0, 2).toUpperCase() || 'US'}
-          </Text>
-        </View>
-        <View style={styles.userInfo}>
-          <Text style={styles.userName}>{user?.username || 'Usuário'}</Text>
-          <Text style={styles.userEmail}>{user?.email || 'email@exemplo.com'}</Text>
-          <Text style={styles.userRole}>{user?.role || 'Funcionário'}</Text>
-        </View>
+    <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Configurações</Text>
+        <Text style={styles.headerSubtitle}>Peralta Gardens</Text>
       </View>
 
-      {configuracoes.map((secao, secaoIndex) => (
-        <View key={secaoIndex} style={styles.configSection}>
-          <Text style={styles.sectionTitle}>{secao.title}</Text>
-          <View style={styles.sectionContent}>
-            {secao.items.map((item, itemIndex) => renderConfigItem(item, itemIndex))}
+      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+        {/* Seção Aparência */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>🎨 Aparência</Text>
+          
+          <View style={styles.settingItem}>
+            <View style={styles.settingLeft}>
+              <Ionicons name="moon" size={24} color="#4caf50" />
+              <View style={styles.settingTextContainer}>
+                <Text style={styles.settingTitle}>Modo Escuro</Text>
+                <Text style={styles.settingDescription}>
+                  Alterna entre tema claro e escuro
+                </Text>
+              </View>
+            </View>
+            <Switch
+              value={darkMode}
+              onValueChange={setDarkMode}
+              trackColor={{ false: '#ccc', true: '#4caf50' }}
+              thumbColor={darkMode ? '#fff' : '#f4f3f4'}
+            />
+          </View>
+
+          <View style={styles.settingItem}>
+            <View style={styles.settingLeft}>
+              <Ionicons name="notifications" size={24} color="#2196f3" />
+              <View style={styles.settingTextContainer}>
+                <Text style={styles.settingTitle}>Notificações</Text>
+                <Text style={styles.settingDescription}>
+                  Receber alertas e lembretes
+                </Text>
+              </View>
+            </View>
+            <Switch
+              value={notifications}
+              onValueChange={setNotifications}
+              trackColor={{ false: '#ccc', true: '#2196f3' }}
+              thumbColor={notifications ? '#fff' : '#f4f3f4'}
+            />
           </View>
         </View>
-      ))}
 
-      <View style={styles.logoutSection}>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} activeOpacity={0.8}>
-          <Ionicons name="log-out-outline" size={22} color="#f44336" />
-          <Text style={styles.logoutText}>Sair da Conta</Text>
-        </TouchableOpacity>
-      </View>
+        {/* Seção Conta */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>👤 Conta</Text>
+          
+          <TouchableOpacity style={styles.settingItem} onPress={() => {
+            Alert.alert('Perfil', 'Tela de perfil será implementada');
+          }}>
+            <View style={styles.settingLeft}>
+              <Ionicons name="person" size={24} color="#9c27b0" />
+              <View style={styles.settingTextContainer}>
+                <Text style={styles.settingTitle}>Meu Perfil</Text>
+                <Text style={styles.settingDescription}>
+                  Editar informações pessoais
+                </Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#ccc" />
+          </TouchableOpacity>
 
-      <View style={styles.versionSection}>
-        <Text style={styles.versionText}>Peralta Gardens App v1.0.0</Text>
-      </View>
-    </ScrollView>
+          <TouchableOpacity style={styles.settingItem} onPress={() => {
+            Alert.alert('Backup', 'Função de backup será implementada');
+          }}>
+            <View style={styles.settingLeft}>
+              <Ionicons name="cloud-upload" size={24} color="#ff9800" />
+              <View style={styles.settingTextContainer}>
+                <Text style={styles.settingTitle}>Backup de Dados</Text>
+                <Text style={styles.settingDescription}>
+                  Fazer backup dos seus dados
+                </Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#ccc" />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.settingItem, styles.dangerItem]} onPress={handleLogout}>
+            <View style={styles.settingLeft}>
+              <Ionicons name="log-out" size={24} color="#f44336" />
+              <View style={styles.settingTextContainer}>
+                <Text style={[styles.settingTitle, styles.dangerText]}>Sair da Conta</Text>
+                <Text style={styles.settingDescription}>
+                  Terminar sessão atual
+                </Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#f44336" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Seção Informações */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>ℹ️ Informações</Text>
+          
+          <View style={styles.settingItem}>
+            <View style={styles.settingLeft}>
+              <Ionicons name="information-circle" size={24} color="#607d8b" />
+              <View style={styles.settingTextContainer}>
+                <Text style={styles.settingTitle}>Versão da App</Text>
+                <Text style={styles.settingDescription}>
+                  Peralta Gardens v1.0.0
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          <TouchableOpacity style={styles.settingItem} onPress={() => {
+            Alert.alert('Suporte', 'Contato: suporte@peraltagardens.com');
+          }}>
+            <View style={styles.settingLeft}>
+              <Ionicons name="help-circle" size={24} color="#3f51b5" />
+              <View style={styles.settingTextContainer}>
+                <Text style={styles.settingTitle}>Suporte</Text>
+                <Text style={styles.settingDescription}>
+                  Obter ajuda e suporte
+                </Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#ccc" />
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  userSection: {
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 20,
-    marginBottom: 20,
-  },
-  userAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+  header: {
     backgroundColor: '#2e7d32',
-    justifyContent: 'center',
+    padding: 24,
+    paddingTop: 50,
     alignItems: 'center',
-    marginRight: 15,
-  },
-  userAvatarText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  userInfo: {
-    flex: 1,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 2,
-  },
-  userEmail: {
-    fontSize: 14,
-    color: '#666',
-  },
-  userRole: {
-    fontSize: 12,
-    color: '#4CAF50',
-    fontWeight: '600',
-    marginTop: 2,
-  },
-  configSection: {
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
     marginBottom: 20,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 4,
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: '#ffffff',
+    opacity: 0.9,
+  },
+  scrollContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  section: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginHorizontal: 20,
-    marginBottom: 10,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2e7d32',
+    marginBottom: 16,
   },
-  sectionContent: {
-    backgroundColor: 'white',
-  },
-  configItem: {
+  settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
-  configItemLeft: {
+  settingLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
   },
-  configItemText: {
+  settingTextContainer: {
+    marginLeft: 12,
     flex: 1,
-    marginLeft: 15,
   },
-  configItemLabel: {
+  settingTitle: {
     fontSize: 16,
-    color: '#333',
+    fontWeight: '600',
+    color: '#333333',
+    marginBottom: 2,
   },
-  configItemSubtitle: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 2,
+  settingDescription: {
+    fontSize: 14,
+    color: '#666666',
   },
-  logoutSection: {
-    backgroundColor: 'white',
-    marginBottom: 20,
+  dangerItem: {
+    borderBottomWidth: 0,
   },
-  logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-  },
-  logoutText: {
-    fontSize: 16,
+  dangerText: {
     color: '#f44336',
-    marginLeft: 15,
-    fontWeight: '500',
-  },
-  versionSection: {
-    alignItems: 'center',
-    paddingVertical: 20,
-    marginBottom: 40,
-  },
-  versionText: {
-    fontSize: 12,
-    color: '#999',
   },
 });
+
+export default Configuracoes;

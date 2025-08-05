@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useClientes } from '../../../context/ClientesContext';
+import { TooltipTouchableOpacity } from '../../../components/GlobalTooltipWrapper';
 
 export default function Clientes({ navigation }) {
   const { 
@@ -167,10 +168,11 @@ export default function Clientes({ navigation }) {
   };
 
   const renderCliente = ({ item }) => (
-    <TouchableOpacity 
+    <TooltipTouchableOpacity 
       style={styles.clienteCard} 
       activeOpacity={0.8}
       onPress={() => handleClientPress(item)}
+      tooltip={`Ver detalhes do cliente ${item.nome}`}
     >
       <View style={styles.clienteHeader}>
         <View style={[styles.avatarContainer, { backgroundColor: getStatusColor(item.status) }]}>
@@ -204,24 +206,26 @@ export default function Clientes({ navigation }) {
           ) : null}
         </View>
         <View style={styles.actionsContainer}>
-          <TouchableOpacity 
+          <TooltipTouchableOpacity 
             onPress={(e) => {
               e.stopPropagation();
               navigation.navigate('EditarCliente', { cliente: item });
             }}
             style={styles.actionButton}
+            tooltip="Editar cliente"
           >
             <Ionicons name="pencil" size={18} color="#2e7d32" />
-          </TouchableOpacity>
-          <TouchableOpacity 
+          </TooltipTouchableOpacity>
+          <TooltipTouchableOpacity 
             onPress={(e) => {
               e.stopPropagation();
               handleDeleteCliente(item);
             }}
             style={styles.actionButton}
+            tooltip="Excluir cliente"
           >
             <Ionicons name="trash" size={18} color="#f44336" />
-          </TouchableOpacity>
+          </TooltipTouchableOpacity>
         </View>
       </View>
       <View style={styles.clienteFooter}>
@@ -232,7 +236,7 @@ export default function Clientes({ navigation }) {
           <Text style={styles.verDetalhesText}>Ver detalhes →</Text>
         </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    </TooltipTouchableOpacity>
   );
 
   if (loading) {
@@ -291,9 +295,12 @@ export default function Clientes({ navigation }) {
             returnKeyType="search"
           />
           {searchText.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchText('')}>
+            <TooltipTouchableOpacity 
+              onPress={() => setSearchText('')}
+              tooltip="Limpar pesquisa"
+            >
               <Ionicons name="close-circle" size={20} color="#666" />
-            </TouchableOpacity>
+            </TooltipTouchableOpacity>
           )}
         </View>
       </View>
@@ -340,13 +347,14 @@ export default function Clientes({ navigation }) {
         }
       />
 
-      <TouchableOpacity 
+      <TooltipTouchableOpacity 
         style={styles.addButton} 
         activeOpacity={0.8}
         onPress={() => setShowAddModal(true)}
+        tooltip="Adicionar novo cliente"
       >
         <Ionicons name="add" size={24} color="white" />
-      </TouchableOpacity>
+      </TooltipTouchableOpacity>
 
       {/* Modal Adicionar Cliente */}
       <Modal

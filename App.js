@@ -2,7 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
+import { Platform } from 'react-native';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { AppSettingsProvider } from './context/AppSettingsContext';
 import { TarefasProvider } from './context/TarefasContext';
 import { ClientesProvider } from './context/ClientesContext';
 // import { FaturasProvider } from './context/FaturasContext';
@@ -16,7 +18,7 @@ import { ProdutosProvider } from './context/ProdutosContext';
 import { ProdutosFitofarmaceuticosProvider } from './context/ProdutosFitofarmaceuticosContext';
 import { AgendamentosProvider } from './context/AgendamentosContext';
 import NotificationService from './src/services/notifications/NotificationService';
-import LoginClean from './src/screens/auth/LoginClean';
+import LoginProfessional from './src/screens/auth/LoginProfessional';
 import AuthenticatedTabNavigator from './src/navigation/AuthenticatedTabNavigator';
 import { TarefasDia, AdicionarTarefa, EditarTarefa, TarefasCliente } from './src/screens/tasks';
 import { Clientes, DetalhesCliente, EditarCliente, MapaClientes } from './src/screens/clients';
@@ -32,33 +34,37 @@ import {
 import { Funcionarios } from './src/screens/users';
 
 // Importar telas de faturas
-import Faturas from './screens/Faturas';
-import DetalhesFatura from './screens/DetalhesFatura';
-import AdicionarFatura from './screens/AdicionarFatura';
-import SelecionarClienteFatura from './screens/SelecionarClienteFatura';
+import Faturas from './screens/faturas/Faturas';
+import DetalhesFatura from './screens/faturas/DetalhesFatura';
+import AdicionarFatura from './screens/faturas/AdicionarFatura';
+import SelecionarClienteFatura from './screens/faturas/SelecionarClienteFatura';
 
 // Importar telas de faturas de fornecedor
-import FaturasFornecedor from './screens/FaturasFornecedor';
-import InserirFaturaFornecedor from './screens/InserirFaturaFornecedor';
-import DetalhesFaturaFornecedor from './screens/DetalhesFaturaFornecedor';
+import FaturasFornecedor from './screens/faturas/FaturasFornecedor';
+import InserirFaturaFornecedor from './screens/faturas/InserirFaturaFornecedor';
+import DetalhesFaturaFornecedor from './screens/faturas/DetalhesFaturaFornecedor';
 
 // Importar telas de serviços prestados
-import ServicosPrestados from './screens/ServicosPrestados';
-import ServicosDefinidos from './screens/ServicosDefinidos';
-import AdicionarServicoDefinido from './screens/AdicionarServicoDefinido';
-import EditarServicoDefinido from './screens/EditarServicoDefinido';
-import AdicionarServicoPrestado from './screens/AdicionarServicoPrestado';
-import DetalhesServicoPrestado from './screens/DetalhesServicoPrestado';
-import GerarDocumentoServico from './screens/GerarDocumentoServico';
+import ServicosPrestados from './screens/servicos/ServicosPrestados';
+import ServicosDefinidos from './screens/servicos/ServicosDefinidos';
+import AdicionarServicoDefinido from './screens/servicos/AdicionarServicoDefinido';
+import EditarServicoDefinido from './screens/servicos/EditarServicoDefinido';
+import AdicionarServicoPrestado from './screens/servicos/AdicionarServicoPrestado';
+import DetalhesServicoPrestado from './screens/servicos/DetalhesServicoPrestado';
+import GerarDocumentoServico from './screens/servicos/GerarDocumentoServico';
 
 // Importar telas de lista de compras
-import ListaCompras from './screens/ListaCompras';
-import AdicionarItemCompra from './screens/AdicionarItemCompra';
+import ListaCompras from './screens/compras/ListaCompras';
+import AdicionarItemCompra from './screens/compras/AdicionarItemCompra';
 
 // Importar telas de agendamento inteligente
-import AgendamentoInteligente from './screens/AgendamentoInteligente';
-import CalendarioAgendamentos from './screens/CalendarioAgendamentos';
-import RelatoriosAgendamentos from './screens/RelatoriosAgendamentos';
+import AgendamentoInteligente from './screens/agendamentos/AgendamentoInteligente';
+import CalendarioAgendamentos from './screens/agendamentos/CalendarioAgendamentos';
+import RelatoriosAgendamentos from './screens/agendamentos/RelatoriosAgendamentos';
+
+// Importar telas de piscinas
+import AnalisePiscina from './screens/piscinas/AnalisePiscina';
+import HistoricoAnalises from './screens/piscinas/HistoricoAnalises';
 import ReagendamentoInteligente from './components/ReagendamentoInteligente';
 
 const Stack = createNativeStackNavigator();
@@ -149,26 +155,26 @@ function AppContent() {
   }
 
   return (
-    <FaturasProvider>
-      <FornecedoresProvider>
-        <FaturasFornecedorProvider>
-          <ServicosPrestadosProvider>
-            <ServicosDefinidosProvider>
-              <ListaComprasProvider>
-                <AgendamentosProvider>
-                  <ClientesProvider>
-                    <TarefasProvider>
-                      <ProdutosProvider>
-                        <ProdutosFitofarmaceuticosProvider>
-              <NavigationContainer 
-                ref={navigationRef}
-                onStateChange={(state) => {
-                  console.log('Mudança de estado de navegação:', state);
-                }}
-                onReady={() => {
-                  console.log('NavigationContainer pronto');
-                }}
-              >
+              <FaturasProvider>
+                <FornecedoresProvider>
+                  <FaturasFornecedorProvider>
+                    <ServicosPrestadosProvider>
+                      <ServicosDefinidosProvider>
+                        <ListaComprasProvider>
+                          <AgendamentosProvider>
+                            <ClientesProvider>
+                              <TarefasProvider>
+                                <ProdutosProvider>
+                                  <ProdutosFitofarmaceuticosProvider>
+                <NavigationContainer 
+                  ref={navigationRef}
+                  onStateChange={(state) => {
+                    console.log('Mudança de estado de navegação:', state);
+                  }}
+                  onReady={() => {
+                    console.log('NavigationContainer pronto');
+                  }}
+                >
               <StatusBar style="auto" />
               <Stack.Navigator 
                 screenOptions={{ 
@@ -186,7 +192,7 @@ function AppContent() {
                 {!isAuthenticated ? (
                   <Stack.Screen 
                     name="Login" 
-                    component={LoginClean} 
+                    component={LoginProfessional} 
                     options={{ headerShown: false }}
                   />
                 ) : (
@@ -305,6 +311,16 @@ function AppContent() {
                       name="Configuracoes" 
                       component={Configuracoes}
                       options={{ title: 'Configurações' }}
+                    />
+                    <Stack.Screen 
+                      name="AnalisePiscina" 
+                      component={AnalisePiscina}
+                      options={{ title: 'Análise da Piscina' }}
+                    />
+                    <Stack.Screen 
+                      name="HistoricoAnalises" 
+                      component={HistoricoAnalises}
+                      options={{ title: 'Análises de Piscina' }}
                     />
                     {/* Telas de Notas de Despesa */}
                     <Stack.Screen 
@@ -438,24 +454,26 @@ function AppContent() {
                 )}
               </Stack.Navigator>
             </NavigationContainer>
-                        </ProdutosFitofarmaceuticosProvider>
-                      </ProdutosProvider>
-                    </TarefasProvider>
-                  </ClientesProvider>
-                </AgendamentosProvider>
-              </ListaComprasProvider>
-            </ServicosDefinidosProvider>
-          </ServicosPrestadosProvider>
-        </FaturasFornecedorProvider>
-      </FornecedoresProvider>
-    </FaturasProvider>
+                                  </ProdutosFitofarmaceuticosProvider>
+                                </ProdutosProvider>
+                              </TarefasProvider>
+                            </ClientesProvider>
+                          </AgendamentosProvider>
+                        </ListaComprasProvider>
+                      </ServicosDefinidosProvider>
+                    </ServicosPrestadosProvider>
+                  </FaturasFornecedorProvider>
+                </FornecedoresProvider>
+              </FaturasProvider>
   );
 }
 
 export default function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <AppSettingsProvider>
+        <AppContent />
+      </AppSettingsProvider>
     </AuthProvider>
   );
 }

@@ -4,14 +4,22 @@ import { View, Text, ScrollView, Image, TouchableOpacity, RefreshControl, Platfo
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
+import { useAppSettings } from '../context/AppSettingsContext';
 import { useTarefas } from '../context/TarefasContext';
 import { useClientes } from '../context/ClientesContext';
-import styles from '../styles/DashboardStylesEnhanced';
+import { useWebTooltip } from '../hooks/useWebTooltip';
+import { useThemedStyles, createThemedStyles } from '../hooks/useThemedStyles';
+import CalendarWidget from '../components/CalendarWidget';
 
 const DashboardEnhanced = ({ navigation }) => {
   const { currentUser } = useAuth();
+  const { getCurrentTheme, getCurrentFontSizes, isLoading } = useAppSettings();
   const { tarefas, getTarefasHoje, getEstatisticas: getEstatisticasTarefas } = useTarefas();
   const { clientes, getEstatisticas: getEstatisticasClientes } = useClientes();
+  
+  const theme = getCurrentTheme();
+  const fontSizes = getCurrentFontSizes();
+  const styles = useThemedStyles(dashboardStyles);
   
   const [refreshing, setRefreshing] = useState(false);
   const [tarefasHoje, setTarefasHoje] = useState([]);
@@ -23,6 +31,15 @@ const DashboardEnhanced = ({ navigation }) => {
   });
 
   const nome = currentUser?.nome || currentUser?.displayName || 'Tiago';
+
+  // Não renderizar se ainda está carregando as configurações
+  if (isLoading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={{ color: theme.text, fontSize: fontSizes.medium }}>Carregando...</Text>
+      </View>
+    );
+  }
 
   useEffect(() => {
     loadDashboardData();
@@ -82,23 +99,35 @@ const DashboardEnhanced = ({ navigation }) => {
 
   return (
     <ScrollView 
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.background }]}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl 
+          refreshing={refreshing} 
+          onRefresh={onRefresh}
+          colors={[theme.primary]}
+          tintColor={theme.primary}
+        />
       }
     >
       {/* Enhanced Header */}
       <LinearGradient 
-        colors={['#2E7D32', '#388E3C', '#4CAF50']} 
+        colors={[theme.primary, theme.secondary, '#4CAF50']} 
         style={styles.enhancedHeader}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
       >
         <View style={styles.headerContent}>
-          <Image source={require('../assets/icon.png')} style={styles.logo} />
+          <View style={styles.logoContainer}>
+            <Image source={require('../assets/icon.png')} style={styles.appLogo} />
+            <Image source={require('../logo/logo1.png')} style={styles.companyLogo} />
+          </View>
           <View style={styles.headerText}>
-            <Text style={styles.greeting}>{getTimeGreeting()}, {nome}!</Text>
-            <Text style={styles.subgreeting}>🌤️ 22ºC · Perfeito para jardinagem</Text>
+            <Text style={[styles.greeting, { fontSize: fontSizes.large }]}>
+              {getTimeGreeting()}, {nome}!
+            </Text>
+            <Text style={[styles.subgreeting, { fontSize: fontSizes.medium }]}>
+              🌤️ 22ºC · Perfeito para jardinagem
+            </Text>
           </View>
         </View>
       </LinearGradient>
@@ -107,11 +136,8 @@ const DashboardEnhanced = ({ navigation }) => {
       <View style={styles.statsGrid}>
         <TouchableOpacity
           onPress={() => navigation?.navigate('TarefasDia')}
-          accessible={true}
-          accessibilityLabel={`${stats.tarefasHoje} tarefas agendadas para hoje`}
-          {...(Platform.OS === 'web' && {
-            title: `${stats.tarefasHoje} tarefas agendadas para hoje. Toque para ver detalhes.`
-          })}
+          style={styles.statCardWrapper}
+          {...useWebTooltip(`${stats.tarefasHoje} tarefas agendadas para hoje. Toque para ver detalhes.`)}
         >
           <LinearGradient colors={['#81C784', '#66BB6A']} style={styles.statCard}>
             <Text style={styles.statNumber}>{stats.tarefasHoje}</Text>
@@ -122,11 +148,8 @@ const DashboardEnhanced = ({ navigation }) => {
 
         <TouchableOpacity
           onPress={() => navigation?.navigate('Clientes')}
-          accessible={true}
-          accessibilityLabel={`${stats.clientesAtivos} clientes ativos no sistema`}
-          {...(Platform.OS === 'web' && {
-            title: `${stats.clientesAtivos} clientes ativos no sistema. Toque para ver a lista.`
-          })}
+          style={styles.statCardWrapper}
+          {...useWebTooltip(`${stats.clientesAtivos} clientes ativos no sistema. Toque para ver a lista.`)}
         >
           <LinearGradient colors={['#64B5F6', '#42A5F5']} style={styles.statCard}>
             <Text style={styles.statNumber}>{stats.clientesAtivos}</Text>
@@ -137,11 +160,8 @@ const DashboardEnhanced = ({ navigation }) => {
 
         <TouchableOpacity
           onPress={() => navigation?.navigate('Tarefas')}
-          accessible={true}
-          accessibilityLabel={`${stats.tarefasPendentes} tarefas pendentes de conclusão`}
-          {...(Platform.OS === 'web' && {
-            title: `${stats.tarefasPendentes} tarefas pendentes de conclusão. Toque para gerenciar.`
-          })}
+          style={styles.statCardWrapper}
+          {...useWebTooltip(`${stats.tarefasPendentes} tarefas pendentes de conclusão. Toque para gerenciar.`)}
         >
           <LinearGradient colors={['#FFB74D', '#FFA726']} style={styles.statCard}>
             <Text style={styles.statNumber}>{stats.tarefasPendentes}</Text>
@@ -152,11 +172,8 @@ const DashboardEnhanced = ({ navigation }) => {
 
         <TouchableOpacity
           onPress={() => navigation?.navigate('Tarefas')}
-          accessible={true}
-          accessibilityLabel={`${stats.tarefasConcluidas} tarefas concluídas recentemente`}
-          {...(Platform.OS === 'web' && {
-            title: `${stats.tarefasConcluidas} tarefas concluídas recentemente. Toque para ver histórico.`
-          })}
+          style={styles.statCardWrapper}
+          {...useWebTooltip(`${stats.tarefasConcluidas} tarefas concluídas recentemente. Toque para ver histórico.`)}
         >
           <LinearGradient colors={['#A5D6A7', '#81C784']} style={styles.statCard}>
             <Text style={styles.statNumber}>{stats.tarefasConcluidas}</Text>
@@ -173,13 +190,7 @@ const DashboardEnhanced = ({ navigation }) => {
           <TouchableOpacity 
             style={styles.actionItem}
             onPress={() => navigation?.navigate('AdicionarTarefa')}
-            accessible={true}
-            accessibilityLabel="Adicionar nova tarefa"
-            accessibilityHint="Toque para criar uma nova tarefa de jardinagem"
-            {...(Platform.OS === 'web' && {
-              onMouseEnter: (e) => e.target.title = 'Criar uma nova tarefa de jardinagem',
-              title: 'Criar uma nova tarefa de jardinagem'
-            })}
+            {...useWebTooltip('Criar uma nova tarefa de jardinagem')}
           >
             <LinearGradient colors={['#66BB6A', '#4CAF50']} style={styles.iconCircle}>
               <Feather name="plus" size={20} color="#fff" />
@@ -190,13 +201,7 @@ const DashboardEnhanced = ({ navigation }) => {
           <TouchableOpacity 
             style={styles.actionItem}
             onPress={() => navigation?.navigate('ServicosPrestados')}
-            accessible={true}
-            accessibilityLabel="Registar serviço prestado"
-            accessibilityHint="Toque para registar um serviço que foi realizado"
-            {...(Platform.OS === 'web' && {
-              onMouseEnter: (e) => e.target.title = 'Registar um serviço que foi realizado',
-              title: 'Registar um serviço que foi realizado'
-            })}
+            {...useWebTooltip('Registar um serviço que foi realizado')}
           >
             <LinearGradient colors={['#42A5F5', '#2196F3']} style={styles.iconCircle}>
               <Feather name="check" size={20} color="#fff" />
@@ -207,13 +212,7 @@ const DashboardEnhanced = ({ navigation }) => {
           <TouchableOpacity 
             style={styles.actionItem}
             onPress={() => navigation?.navigate('Faturas')}
-            accessible={true}
-            accessibilityLabel="Criar nova fatura"
-            accessibilityHint="Toque para criar uma nova fatura para cliente"
-            {...(Platform.OS === 'web' && {
-              onMouseEnter: (e) => e.target.title = 'Criar uma nova fatura para cliente',
-              title: 'Criar uma nova fatura para cliente'
-            })}
+            {...useWebTooltip('Criar uma nova fatura para cliente')}
           >
             <LinearGradient colors={['#FFA726', '#FF9800']} style={styles.iconCircle}>
               <MaterialIcons name="receipt" size={20} color="#fff" />
@@ -224,13 +223,7 @@ const DashboardEnhanced = ({ navigation }) => {
           <TouchableOpacity 
             style={styles.actionItem}
             onPress={() => navigation?.navigate('Clientes')}
-            accessible={true}
-            accessibilityLabel="Adicionar novo cliente"
-            accessibilityHint="Toque para adicionar um novo cliente ao sistema"
-            {...(Platform.OS === 'web' && {
-              onMouseEnter: (e) => e.target.title = 'Adicionar um novo cliente ao sistema',
-              title: 'Adicionar um novo cliente ao sistema'
-            })}
+            {...useWebTooltip('Adicionar um novo cliente ao sistema')}
           >
             <LinearGradient colors={['#AB47BC', '#9C27B0']} style={styles.iconCircle}>
               <Feather name="user-plus" size={20} color="#fff" />
@@ -240,17 +233,19 @@ const DashboardEnhanced = ({ navigation }) => {
         </View>
       </LinearGradient>
 
+      {/* Calendar Widget */}
+      <View style={styles.sectionTitle}>
+        <Text style={styles.widgetTitle}>📅 Calendário</Text>
+      </View>
+      <CalendarWidget navigation={navigation} tasks={tarefas || []} />
+
       {/* Today's Tasks */}
       <View style={styles.card}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Tarefas de Hoje</Text>
           <TouchableOpacity 
             onPress={() => navigation?.navigate('TarefasDia')}
-            accessible={true}
-            accessibilityLabel="Ver todas as tarefas"
-            {...(Platform.OS === 'web' && {
-              title: 'Ver lista completa de tarefas do dia'
-            })}
+            {...useWebTooltip('Ver lista completa de tarefas do dia')}
           >
             <Text style={styles.seeAllText}>Ver todas</Text>
           </TouchableOpacity>
@@ -262,11 +257,7 @@ const DashboardEnhanced = ({ navigation }) => {
               key={index}
               style={styles.taskItem}
               onPress={() => navigation?.navigate('DetalhesServicoPrestado', { tarefaId: tarefa.id })}
-              accessible={true}
-              accessibilityLabel={`Tarefa: ${tarefa.descricao || tarefa.tipo} às ${tarefa.horario || '09:00'}`}
-              {...(Platform.OS === 'web' && {
-                title: `Toque para ver detalhes da tarefa: ${tarefa.descricao || tarefa.tipo}`
-              })}
+              {...useWebTooltip(`Toque para ver detalhes da tarefa: ${tarefa.descricao || tarefa.tipo}`)}
             >
               <View style={styles.taskIcon}>
                 <FontAwesome 
@@ -292,11 +283,7 @@ const DashboardEnhanced = ({ navigation }) => {
             <TouchableOpacity 
               style={styles.taskItem}
               onPress={() => navigation?.navigate('Tarefas')}
-              accessible={true}
-              accessibilityLabel="Poda de arbustos para Dona Maria às 09:00"
-              {...(Platform.OS === 'web' && {
-                title: 'Toque para ver detalhes da tarefa de poda'
-              })}
+              {...useWebTooltip('Toque para ver detalhes da tarefa de poda')}
             >
               <View style={styles.taskIcon}>
                 <FontAwesome name="tree" size={18} color="#4CAF50" />
@@ -311,11 +298,7 @@ const DashboardEnhanced = ({ navigation }) => {
             <TouchableOpacity 
               style={styles.taskItem}
               onPress={() => navigation?.navigate('Tarefas')}
-              accessible={true}
-              accessibilityLabel="Limpeza de piscina para Sr. João às 11:30"
-              {...(Platform.OS === 'web' && {
-                title: 'Toque para ver detalhes da limpeza de piscina'
-              })}
+              {...useWebTooltip('Toque para ver detalhes da limpeza de piscina')}
             >
               <View style={styles.taskIcon}>
                 <FontAwesome name="tint" size={18} color="#2196F3" />
@@ -330,11 +313,7 @@ const DashboardEnhanced = ({ navigation }) => {
             <TouchableOpacity 
               style={styles.taskItem}
               onPress={() => navigation?.navigate('Tarefas')}
-              accessible={true}
-              accessibilityLabel="Plantação de flores na Vila Verde às 14:00"
-              {...(Platform.OS === 'web' && {
-                title: 'Toque para ver detalhes da plantação de flores'
-              })}
+              {...useWebTooltip('Toque para ver detalhes da plantação de flores')}
             >
               <View style={styles.taskIcon}>
                 <FontAwesome name="leaf" size={18} color="#FF9800" />
@@ -358,11 +337,7 @@ const DashboardEnhanced = ({ navigation }) => {
         </Text>
         <TouchableOpacity 
           style={styles.tipButton}
-          accessible={true}
-          accessibilityLabel="Ver mais dicas de jardinagem"
-          {...(Platform.OS === 'web' && {
-            title: 'Toque para ver mais dicas e conselhos de jardinagem'
-          })}
+          {...useWebTooltip('Toque para ver mais dicas e conselhos de jardinagem')}
         >
           <Text style={styles.tipButtonText}>Ver mais dicas</Text>
         </TouchableOpacity>
@@ -370,5 +345,172 @@ const DashboardEnhanced = ({ navigation }) => {
     </ScrollView>
   );
 };
+
+// Estilos temáticos
+const dashboardStyles = createThemedStyles((theme, fontSizes) => ({
+  container: {
+    flex: 1,
+    backgroundColor: theme.background,
+  },
+  enhancedHeader: {
+    paddingTop: 50,
+    paddingBottom: 20,
+    paddingHorizontal: 20,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 15,
+  },
+  appLogo: {
+    width: 35,
+    height: 35,
+    marginRight: 8,
+  },
+  companyLogo: {
+    width: 30,
+    height: 30,
+  },
+  headerText: {
+    flex: 1,
+  },
+  greeting: {
+    color: 'white',
+    fontSize: fontSizes.large,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  subgreeting: {
+    color: 'rgba(255,255,255,0.9)',
+    fontSize: fontSizes.medium,
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 15,
+    backgroundColor: theme.background,
+  },
+  statCardWrapper: {
+    width: '48%',
+    margin: '1%',
+    borderRadius: 12,
+    backgroundColor: theme.card,
+    elevation: 3,
+    shadowColor: theme.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  statCard: {
+    padding: 20,
+    borderRadius: 12,
+    alignItems: 'center',
+    minHeight: 120,
+    justifyContent: 'center',
+  },
+  statNumber: {
+    fontSize: fontSizes.xxlarge,
+    fontWeight: 'bold',
+    color: 'white',
+    marginVertical: 8,
+  },
+  statLabel: {
+    fontSize: fontSizes.small,
+    color: 'rgba(255,255,255,0.9)',
+    textAlign: 'center',
+  },
+  card: {
+    backgroundColor: theme.card,
+    margin: 15,
+    padding: 20,
+    borderRadius: 15,
+    elevation: 2,
+    shadowColor: theme.shadow,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  sectionTitle: {
+    fontSize: fontSizes.large,
+    fontWeight: 'bold',
+    color: theme.text,
+    marginBottom: 15,
+  },
+  taskCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.surface,
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  taskIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: theme.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  taskContent: {
+    flex: 1,
+  },
+  taskTitle: {
+    fontSize: fontSizes.medium,
+    fontWeight: '600',
+    color: theme.text,
+    marginBottom: 4,
+  },
+  taskTime: {
+    fontSize: fontSizes.small,
+    color: theme.textSecondary,
+  },
+  tipText: {
+    fontSize: fontSizes.medium,
+    color: theme.text,
+    lineHeight: 20,
+    marginBottom: 15,
+  },
+  tipButton: {
+    backgroundColor: theme.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    alignSelf: 'flex-start',
+  },
+  tipButtonText: {
+    color: 'white',
+    fontSize: fontSizes.small,
+    fontWeight: '600',
+  },
+  quickActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+  },
+  actionButton: {
+    alignItems: 'center',
+    padding: 10,
+  },
+  actionIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: theme.surface,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  actionText: {
+    fontSize: fontSizes.small,
+    color: theme.text,
+    textAlign: 'center',
+  },
+}));
 
 export default DashboardEnhanced;
